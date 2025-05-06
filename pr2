@@ -1,0 +1,30 @@
+import numpy as np
+class McCullochPittsNeuron:
+    def __init__(self, weights, threshold):
+        self.weights = np.array(weights)
+        self.threshold = threshold
+
+    def activate(self, inputs):
+        net_input = np.dot(inputs, self.weights)
+        return 1 if net_input >= self.threshold else 0
+
+# Define weights and threshold for the ANDNOT neuron
+weights = [1, -1]  # Weight for A is 1, weight for B is -1
+threshold = 1      # Threshold to fire the neuron
+
+# Initialize the McCulloch-Pitts neuron
+andnot_neuron = McCullochPittsNeuron(weights, threshold)
+
+# Test the neuron with all input combinations
+inputs = np.array([
+    [0, 0],
+    [0, 1],
+    [1, 0],
+    [1, 1]
+])
+
+print("ANDNOT Function Results:")
+print("A B | Output")
+for input_pair in inputs:
+    output = andnot_neuron.activate(input_pair)
+    print(f"{input_pair[0]} {input_pair[1]} |   {output}")
