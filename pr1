@@ -1,0 +1,31 @@
+import numpy as np
+import matplotlib.pyplot as plt
+
+# Activation functions
+def relu(x):
+    return np.maximum(0, x)
+
+def sigmoid(x):
+    return 1 / (1 + np.exp(-x))
+
+def softmax(x):
+    exp_x = np.exp(x - np.max(x))
+    return exp_x / np.sum(exp_x)
+
+def tanh(x):
+    return (np.exp(x) - np.exp(-x)) / (np.exp(x) + np.exp(-x))
+
+# Input range
+x = np.linspace(-10, 10, 500)
+# Plotting setup
+funcs = [relu, sigmoid, softmax, tanh]
+titles = ['ReLU', 'Sigmoid', 'Softmax (illustrative)', 'Tanh']
+
+fig, axes = plt.subplots(2, 2, figsize=(12, 8))
+for ax, func, title in zip(axes.flatten(), funcs, titles):
+    ax.plot(x, func(x))
+    ax.set(title=f'{title} Activation Function', xlabel='Input', ylabel='Output')
+    ax.grid(True)
+
+plt.tight_layout()
+plt.show()
