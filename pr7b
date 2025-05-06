@@ -1,0 +1,94 @@
+import numpy as np
+
+# Generate simple toy dataset (3 classes, 2D input)
+np.random.seed(0)
+def generate_data():
+    N = 100  # samples per class
+    D = 2    # input dimensionality
+    K = 3    # number of classes
+    X = np.zeros((N*K, D))
+    y = np.zeros(N*K, dtype='uint8')
+    for j in range(K):
+        ix = range(N*j, N*(j+1))
+        r = np.linspace(0.0, 1, N)       # radius
+        t = np.linspace(j*4, (j+1)*4, N) + np.random.randn(N)*0.2  # theta
+        X[ix] = np.c_[r*np.sin(t), r*np.cos(t)]
+        y[ix] = j
+    return X, y
+
+X, y = generate_data()
+
+# One-hot encode labels
+def one_hot(y, num_classes):
+    return np.eye(num_classes)[y]
+
+y_onehot = one_hot(y, 3)
+
+# Activation functions
+def relu(x):
+    return np.maximum(0, x)
+
+def relu_deriv(x):
+    return (x > 0).astype(float)
+
+def softmax(x):
+    exps = np.exp(x - np.max(x, axis=1, keepdims=True))  # for stability
+    return exps / np.sum(exps, axis=1, keepdims=True)
+
+# Loss function (Cross-Entropy)
+def compute_loss(y_true, y_pred):
+    m = y_true.shape[0]
+    log_likelihood = -np.log(y_pred[range(m), np.argmax(y_true, axis=1)] + 1e-8)
+    return np.sum(log_likelihood) / m
+
+# Initialize weights
+input_size = 2
+hidden_size = 100
+output_size = 3
+lr = 1.0  # learning rate
+
+W1 = 0.01 * np.random.randn(input_size, hidden_size)
+b1 = np.zeros((1, hidden_size))
+W2 = 0.01 * np.random.randn(hidden_size, output_size)
+b2 = np.zeros((1, output_size))
+
+# Training loop
+for epoch in range(1000):
+    # Forward pass
+    z1 = np.dot(X, W1) + b1
+    a1 = relu(z1)
+    z2 = np.dot(a1, W2) + b2
+    probs = softmax(z2)
+
+    # Loss
+    loss = compute_loss(y_onehot, probs)
+    if epoch % 100 == 0:
+        print(f"Epoch {epoch}, Loss: {loss:.4f}")
+
+    # Backpropagation
+    dz2 = probs - y_onehot
+    dW2 = np.dot(a1.T, dz2)
+    db2 = np.sum(dz2, axis=0, keepdims=True)
+
+    da1 = np.dot(dz2, W2.T)
+    dz1 = da1 * relu_deriv(z1)
+    dW1 = np.dot(X.T, dz1)
+    db1 = np.sum(dz1, axis=0, keepdims=True)
+
+    # Update weights
+    W1 -= lr * dW1
+    b1 -= lr * db1
+    W2 -= lr * dW2
+    b2 -= lr * db2
+
+# Predict
+def predict(X):
+    z1 = np.dot(X, W1) + b1
+    a1 = relu(z1)
+    z2 = np.dot(a1, W2) + b2
+    probs = softmax(z2)
+    return np.argmax(probs, axis=1)
+
+y_pred = predict(X)
+acc = np.mean(y_pred == y)
+print(f"Training Accuracy: {acc * 100:.2f}%")
