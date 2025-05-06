@@ -1,0 +1,26 @@
+SL2 Practical’s List for PR Exam:
+Group A 
+1. Write a Python program to plot a few activation functions that are being used in neural networks. 
+2. Generate ANDNOT function using McCulloch-Pitts neural net by a python program. 
+3. Write a Python Program using Perceptron Neural Network to recognise even and odd numbers. Given numbers are in ASCII form 0 to 9 
+4. With a suitable example demonstrate the perceptron learning law with its decision regions using python. Give the output in graphical form. 
+5. Write a python Program for Bidirectional Associative Memory with two pairs of vectors. 
+6. Implement Artificial Neural Network training process in Python by using Forward Propagation, Back Propagation. 
+7. Create a Neural network architecture from scratch in Python and use it to do multi-class classification on any data. 
+Parameters to be considered while creating the neural network from scratch are specified as: 
+(1) No of hidden layers : 1 or more 
+(2) No. of neurons in hidden layer: 100 
+(3) Non-linearity in the layer : Relu 
+(4) Use more than 1 neuron in the output layer. Use a suitable threshold value 
+Use appropriate Optimisation algorithm 
+Group B (Any 4) 
+1. Write a python program to show Back Propagation Network for XOR function with Binary Input and Output 
+2. Write a python program to illustrate ART neural network. 
+3. Write a python program in python program for creating a Back Propagation Feed-forward neural network 
+4. Write a python program to design a Hopfield Network which stores 4 vectors 
+5. Write Python program to implement CNN object detection. Discuss numerous performance evaluation metrics for evaluating the object detecting algorithms' performance. 
+
+Group C (Any 3) 
+1. How to Train a Neural Network with TensorFlow/Pytorch and evaluation of logistic regression using tensorflow 
+2. TensorFlow/Pytorch implementation of CNN 
+3. MNIST Handwritten Character Detection using PyTorch, Keras and Tensorflow 
