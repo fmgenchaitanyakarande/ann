@@ -1,0 +1,40 @@
+import numpy as np
+import matplotlib.pyplot as plt
+
+class ART1:
+    def __init__(self, input_size, vigilance=0.75):
+        self.input_size = input_size
+        self.vigilance = vigilance
+        self.weights = []  
+
+    def match(self, pattern, weight):
+        intersection = np.minimum(pattern, weight)
+        return np.sum(intersection) / np.sum(pattern) >= self.vigilance
+
+    def train(self, patterns):
+        labels = []
+        for pattern in patterns:
+            matched = False
+            for i, weight in enumerate(self.weights):
+                if self.match(pattern, weight):
+                    self.weights[i] = np.minimum(pattern, weight)
+                    labels.append(i)
+                    matched = True
+                    break
+            if not matched:
+                self.weights.append(pattern.copy())
+                labels.append(len(self.weights) - 1)
+        return labels
+
+patterns = np.array([
+    [1, 1, 0, 0, 1, 0],   
+    [1, 1, 0, 0, 1, 0],   
+    [0, 0, 1, 1, 0, 1],   
+    [1, 0, 1, 0, 1, 0],  
+])
+
+art = ART1(input_size=6, vigilance=0.8)
+labels = art.train(patterns)
+
+for i, pattern in enumerate(patterns):
+    print(f"Input {i+1}: {pattern} → Cluster: {labels[i]}")
