@@ -1,0 +1,45 @@
+''' ithe dataset internet varun ghetlay tr tumchya dataset anusaar columns che names dya code mdhe '''
+import tensorflow as tf
+import numpy as np
+from sklearn.model_selection import train_test_split
+from sklearn.preprocessing import StandardScaler
+from sklearn.metrics import accuracy_score, classification_report
+from sklearn.datasets import load_diabetes  # Optional: Use another binary dataset
+import pandas as pd
+
+# Load a binary classification dataset
+# We'll use Pima Indians Diabetes dataset from a CSV
+url = "https://raw.githubusercontent.com/jbrownlee/Datasets/master/pima-indians-diabetes.data.csv"
+column_names = ['Pregnancies', 'Glucose', 'BloodPressure', 'SkinThickness', 'Insulin', 
+                'BMI', 'DiabetesPedigreeFunction', 'Age', 'Outcome']
+df = pd.read_csv(url, names=column_names)
+
+# Split features and labels
+X = df.drop('Outcome', axis=1).values
+y = df['Outcome'].values
+
+# Split into training and test sets
+X_train, X_test, y_train, y_test = train_test_split(X, y, test_size=0.2, random_state=42)
+
+# Scale the data
+scaler = StandardScaler()
+X_train = scaler.fit_transform(X_train)
+X_test = scaler.transform(X_test)
+
+# Logistic regression model (single dense layer with sigmoid)
+logistic_model = tf.keras.Sequential([
+    tf.keras.Input(shape=(X_train.shape[1],)),
+    tf.keras.layers.Dense(1, activation='sigmoid')
+])
+logistic_model.compile(optimizer='adam',
+                       loss='binary_crossentropy',
+                       metrics=['accuracy'])
+
+# Train the logistic regression model
+logistic_model.fit(X_train, y_train, epochs=100, verbose=0)
+# Evaluate
+loss, acc = logistic_model.evaluate(X_test, y_test, verbose=0)
+print(f"Logistic Regression Accuracy: {acc:.4f}")
+# Predictions and classification report
+y_pred_log = (logistic_model.predict(X_test) > 0.5).astype("int32")
+print(classification_report(y_test, y_pred_log))
